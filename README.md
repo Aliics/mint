@@ -9,7 +9,7 @@ Java argument handler framework.
 private boolean fooBarOptionEnabled;
 
 public static void main(final String... args) {
-    final ArgumentHandler argumentHandler = new ArgumentHandler(this.getClass());
+    final ArgumentHandler argumentHandler = new ArgumentHandler(this);
     argumentHandler.enrichAnnotated(args);
     
     System.out.println(fooBarOptionEnabled);
