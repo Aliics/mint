@@ -12,10 +12,10 @@ class ArgumentHandlerTestCase {
 
     private ArgumentHandler argumentHandler;
 
-    @Option(option = "foobar", type = Boolean.class)
+    @Option(option = "foobar")
     private boolean booleanOptionTestEnabled;
 
-    @Option(option = "fizzbuzz", type = String.class, requiresParam = true)
+    @Option(option = "fizzbuzz", requiresParam = true)
     private String stringOptionTestParam;
 
 

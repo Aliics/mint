@@ -9,8 +9,5 @@ public @interface Option {
     String option();
 
 
-    Class type();
-
-
     boolean requiresParam() default false;
 }
