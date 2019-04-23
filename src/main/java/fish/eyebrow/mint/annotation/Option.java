@@ -10,4 +10,7 @@ public @interface Option {
 
 
     Class type();
+
+
+    boolean requiresParam() default false;
 }
