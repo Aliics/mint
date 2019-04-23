@@ -2,6 +2,7 @@ package fish.eyebrow.mint;
 
 import fish.eyebrow.mint.annotation.Option;
 
+import java.io.IOException;
 import java.io.OptionalDataException;
 import java.lang.reflect.Field;
 import java.util.Arrays;
@@ -18,21 +19,20 @@ public class ArgumentHandler {
     }
 
 
-    public void enrichAnnotated(final String... args) throws OptionalDataException, IllegalAccessException {
+    public void enrichAnnotated(final String... args) throws IOException, IllegalAccessException {
         final Field[] declaredFields = instance.getClass().getDeclaredFields();
 
-        for (int i = 0; i < declaredFields.length; i++) {
-            final Field declaredField = declaredFields[i];
+        for (final Field declaredField : declaredFields) {
             if (declaredField.isAnnotationPresent(Option.class)) {
                 final Option option = declaredField.getAnnotation(Option.class);
                 final String optionWithPrefix = OPTION_PREFIX + option.option();
                 final boolean requiresParam = option.requiresParam();
 
-                final boolean containsOption = Arrays.asList(args).contains(optionWithPrefix);
-                if (containsOption) {
+                final int optionIndex = Arrays.asList(args).indexOf(optionWithPrefix);
+                if (optionIndex != -1) {
                     declaredField.setAccessible(true);
-                    setAnnotatedField(declaredField, requiresParam, declaredFields[i + 1]);
-
+                    final String optionParam = optionIndex < args.length - 1 ? args[optionIndex + 1] : null;
+                    setAnnotatedField(declaredField, requiresParam, optionParam);
                     break;
                 }
             }
@@ -40,12 +40,17 @@ public class ArgumentHandler {
     }
 
 
-    void setAnnotatedField(final Field declaredField, final boolean requiresParam, final Field optionParam) throws IllegalAccessException {
-        // get declaredField type
+    private void setAnnotatedField(final Field declaredField, final boolean requiresParam, final String optionParam) throws IllegalAccessException, IOException {
+//        final Class fieldType = declaredField.getType();
 
-        // check if declaredField need a param
-        
-        // set type based on field type
-        declaredField.set(instance, true);
+        if (requiresParam) {
+            if (optionParam != null) {
+                declaredField.set(instance, optionParam);
+            } else {
+                throw new IOException("Expected option parameter.");
+            }
+        } else {
+            declaredField.set(instance, true);
+        }
     }
 }

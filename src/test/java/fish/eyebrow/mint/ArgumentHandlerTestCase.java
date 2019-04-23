@@ -6,6 +6,7 @@ import fish.eyebrow.mint.annotation.Option;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
 import java.io.OptionalDataException;
 
 class ArgumentHandlerTestCase {
@@ -16,7 +17,7 @@ class ArgumentHandlerTestCase {
     private boolean booleanOptionTestEnabled;
 
     @Option(option = "fizzbuzz", type = String.class, requiresParam = true)
-    private String stringOptionParamTest;
+    private String stringOptionTestParam;
 
 
     @BeforeEach
@@ -26,7 +27,7 @@ class ArgumentHandlerTestCase {
 
 
     @Test
-    void shouldSetBooleanToTrueWhenGivenAsOption() throws OptionalDataException, IllegalAccessException {
+    void shouldSetBooleanToTrueWhenGivenAsOption() throws IOException, IllegalAccessException {
         final String[] fooBarEnabled = new String[] { "--foobar" };
         argumentHandler.enrichAnnotated(fooBarEnabled);
 
@@ -35,8 +36,8 @@ class ArgumentHandlerTestCase {
 
 
     @Test
-    void shouldNotTouchBooleanOnlyOtherOptionsAreGiven() throws OptionalDataException, IllegalAccessException {
-        final String[] fizzBuzzEnabled = new String[] { "--fizzbuzz" };
+    void shouldNotTouchBooleanOnlyOtherOptionsAreGiven() throws IOException, IllegalAccessException {
+        final String[] fizzBuzzEnabled = new String[] { "--fizzbuzz", "foobar" };
         argumentHandler.enrichAnnotated(fizzBuzzEnabled);
 
         assertThat(booleanOptionTestEnabled).isFalse();
@@ -44,7 +45,7 @@ class ArgumentHandlerTestCase {
 
 
     @Test
-    void shouldNotTouchBooleanWhenNoOptionsAreGiven() throws OptionalDataException, IllegalAccessException {
+    void shouldNotTouchBooleanWhenNoOptionsAreGiven() throws IOException, IllegalAccessException {
         argumentHandler.enrichAnnotated();
 
         assertThat(booleanOptionTestEnabled).isFalse();
@@ -52,11 +53,11 @@ class ArgumentHandlerTestCase {
 
 
     @Test
-    void shouldSetStringToParamGivenWithOption() throws OptionalDataException, IllegalAccessException {
+    void shouldSetStringToParamGivenWithOption() throws IOException, IllegalAccessException {
         final String[] fizzBuzzEnabled = new String[] { "--fizzbuzz", "foobar" };
         argumentHandler.enrichAnnotated(fizzBuzzEnabled);
 
-        assertThat(stringOptionParamTest).isEqualTo("foobar");
+        assertThat(stringOptionTestParam).isEqualTo("foobar");
     }
 
 
@@ -65,9 +66,9 @@ class ArgumentHandlerTestCase {
         try {
             final String[] fizzBuzzEnabled = new String[] { "--fizzbuzz" };
             argumentHandler.enrichAnnotated(fizzBuzzEnabled);
-            throw new Exception();
+            throw new IOException();
         } catch (Exception e) {
-            assertThat(e).isInstanceOf(OptionalDataException.class);
+            assertThat(e).isInstanceOf(IOException.class);
         }
     }
 }
