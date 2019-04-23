@@ -1,13 +1,12 @@
 package fish.eyebrow.mint;
 
-import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
-
 import fish.eyebrow.mint.annotation.Option;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
-import java.io.OptionalDataException;
+
+import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
 class ArgumentHandlerTestCase {
 

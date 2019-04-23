@@ -3,7 +3,6 @@ package fish.eyebrow.mint;
 import fish.eyebrow.mint.annotation.Option;
 
 import java.io.IOException;
-import java.io.OptionalDataException;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 
