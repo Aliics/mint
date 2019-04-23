@@ -27,7 +27,7 @@ class ArgumentHandlerTestCase {
 
     @Test
     void shouldSetBooleanToTrueWhenGivenAsOption() throws IOException, IllegalAccessException {
-        final String[] fooBarEnabled = new String[] { "--foobar" };
+        final String[] fooBarEnabled = new String[]{"--foobar"};
         argumentHandler.enrichAnnotated(fooBarEnabled);
 
         assertThat(booleanOptionTestEnabled).isTrue();
@@ -36,7 +36,7 @@ class ArgumentHandlerTestCase {
 
     @Test
     void shouldNotTouchBooleanOnlyOtherOptionsAreGiven() throws IOException, IllegalAccessException {
-        final String[] fizzBuzzEnabled = new String[] { "--fizzbuzz", "foobar" };
+        final String[] fizzBuzzEnabled = new String[]{"--fizzbuzz", "foobar"};
         argumentHandler.enrichAnnotated(fizzBuzzEnabled);
 
         assertThat(booleanOptionTestEnabled).isFalse();
@@ -53,7 +53,7 @@ class ArgumentHandlerTestCase {
 
     @Test
     void shouldSetStringToParamGivenWithOption() throws IOException, IllegalAccessException {
-        final String[] fizzBuzzEnabled = new String[] { "--fizzbuzz", "foobar" };
+        final String[] fizzBuzzEnabled = new String[]{"--fizzbuzz", "foobar"};
         argumentHandler.enrichAnnotated(fizzBuzzEnabled);
 
         assertThat(stringOptionTestParam).isEqualTo("foobar");
@@ -63,11 +63,43 @@ class ArgumentHandlerTestCase {
     @Test
     void shouldThrowErrorWhenOptionExpectsRequiresAParam() {
         try {
-            final String[] fizzBuzzEnabled = new String[] { "--fizzbuzz" };
+            final String[] fizzBuzzEnabled = new String[]{"--fizzbuzz"};
             argumentHandler.enrichAnnotated(fizzBuzzEnabled);
-            throw new IOException();
+            throw new AssertionError();
         } catch (Exception e) {
             assertThat(e).isInstanceOf(IOException.class);
         }
+    }
+
+
+    @Test
+    void shouldThrowErrorWhenOptionParamIsAnotherParam() {
+        try {
+            final String[] fizzBuzzEnabled = new String[]{"--fizzbuzz", "--foobar"};
+            argumentHandler.enrichAnnotated(fizzBuzzEnabled);
+            throw new AssertionError();
+        } catch (Exception e) {
+            assertThat(e).isInstanceOf(IOException.class);
+        }
+    }
+
+
+    @Test
+    void shouldSetBothFieldsWhenGivenBothOptions() throws IOException, IllegalAccessException {
+        final String[] fizzBuzzEnabled = new String[]{"--foobar", "--fizzbuzz", "foobar"};
+        argumentHandler.enrichAnnotated(fizzBuzzEnabled);
+
+        assertThat(booleanOptionTestEnabled).isTrue();
+        assertThat(stringOptionTestParam).isEqualTo("foobar");
+    }
+
+
+    @Test
+    void shouldSetBothFieldsWhenGivenBothOptionsAndRequiresParamFieldIsFirst() throws IOException, IllegalAccessException {
+        final String[] fizzBuzzEnabled = new String[]{"--fizzbuzz", "foobar", "--foobar"};
+        argumentHandler.enrichAnnotated(fizzBuzzEnabled);
+
+        assertThat(booleanOptionTestEnabled).isTrue();
+        assertThat(stringOptionTestParam).isEqualTo("foobar");
     }
 }
