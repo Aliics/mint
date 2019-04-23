@@ -1,6 +1,7 @@
 package fish.eyebrow.mint;
 
 import fish.eyebrow.mint.annotation.Option;
+import fish.eyebrow.mint.exception.InvalidAnnotationTypeException;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -21,7 +22,7 @@ public class ArgumentHandler {
     }
 
 
-    public void enrichAnnotated(final String... args) throws IOException, IllegalAccessException {
+    public void enrichAnnotated(final String... args) throws IOException, IllegalAccessException, InvalidAnnotationTypeException {
         final Field[] declaredFields = instance.getClass().getDeclaredFields();
 
         for (final Field declaredField : declaredFields) {
@@ -41,7 +42,7 @@ public class ArgumentHandler {
     }
 
 
-    private void setAnnotatedField(final Field declaredField, final boolean requiresParam, final String optionParam) throws IllegalAccessException, IOException {
+    private void setAnnotatedField(final Field declaredField, final boolean requiresParam, final String optionParam) throws IllegalAccessException, IOException, InvalidAnnotationTypeException {
         final Class fieldType = declaredField.getType();
 
         if (ACCEPTED_CLASSES.contains(fieldType)) {
@@ -57,6 +58,8 @@ public class ArgumentHandler {
             } else {
                 declaredField.set(instance, true);
             }
+        } else {
+            throw new InvalidAnnotationTypeException(declaredField);
         }
     }
 }

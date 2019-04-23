@@ -1,6 +1,7 @@
 package fish.eyebrow.mint;
 
 import fish.eyebrow.mint.annotation.Option;
+import fish.eyebrow.mint.exception.InvalidAnnotationTypeException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -8,6 +9,7 @@ import java.io.IOException;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
+@SuppressWarnings("unused")
 class ArgumentHandlerTestCase {
 
     private ArgumentHandler argumentHandler;
@@ -26,7 +28,7 @@ class ArgumentHandlerTestCase {
 
 
     @Test
-    void shouldSetBooleanToTrueWhenGivenAsOption() throws IOException, IllegalAccessException {
+    void shouldSetBooleanToTrueWhenGivenAsOption() throws IOException, IllegalAccessException, InvalidAnnotationTypeException {
         final String[] fooBarEnabled = new String[]{"--foobar"};
         argumentHandler.enrichAnnotated(fooBarEnabled);
 
@@ -35,7 +37,7 @@ class ArgumentHandlerTestCase {
 
 
     @Test
-    void shouldNotTouchBooleanOnlyOtherOptionsAreGiven() throws IOException, IllegalAccessException {
+    void shouldNotTouchBooleanOnlyOtherOptionsAreGiven() throws IOException, IllegalAccessException, InvalidAnnotationTypeException {
         final String[] fizzBuzzEnabled = new String[]{"--fizzbuzz", "foobar"};
         argumentHandler.enrichAnnotated(fizzBuzzEnabled);
 
@@ -44,7 +46,7 @@ class ArgumentHandlerTestCase {
 
 
     @Test
-    void shouldNotTouchBooleanWhenNoOptionsAreGiven() throws IOException, IllegalAccessException {
+    void shouldNotTouchBooleanWhenNoOptionsAreGiven() throws IOException, IllegalAccessException, InvalidAnnotationTypeException {
         argumentHandler.enrichAnnotated();
 
         assertThat(booleanOptionTestEnabled).isFalse();
@@ -52,7 +54,7 @@ class ArgumentHandlerTestCase {
 
 
     @Test
-    void shouldSetStringToParamGivenWithOption() throws IOException, IllegalAccessException {
+    void shouldSetStringToParamGivenWithOption() throws IOException, IllegalAccessException, InvalidAnnotationTypeException {
         final String[] fizzBuzzEnabled = new String[]{"--fizzbuzz", "foobar"};
         argumentHandler.enrichAnnotated(fizzBuzzEnabled);
 
@@ -61,7 +63,7 @@ class ArgumentHandlerTestCase {
 
 
     @Test
-    void shouldThrowErrorWhenOptionExpectsRequiresAParam() {
+    void shouldThrowErrorWhenOptionExpectsRequiresAParam() throws InvalidAnnotationTypeException {
         try {
             final String[] fizzBuzzEnabled = new String[]{"--fizzbuzz"};
             argumentHandler.enrichAnnotated(fizzBuzzEnabled);
@@ -73,7 +75,7 @@ class ArgumentHandlerTestCase {
 
 
     @Test
-    void shouldThrowErrorWhenOptionParamIsAnotherParam() {
+    void shouldThrowErrorWhenOptionParamIsAnotherParam() throws InvalidAnnotationTypeException {
         try {
             final String[] fizzBuzzEnabled = new String[]{"--fizzbuzz", "--foobar"};
             argumentHandler.enrichAnnotated(fizzBuzzEnabled);
@@ -85,7 +87,7 @@ class ArgumentHandlerTestCase {
 
 
     @Test
-    void shouldSetBothFieldsWhenGivenBothOptions() throws IOException, IllegalAccessException {
+    void shouldSetBothFieldsWhenGivenBothOptions() throws IOException, IllegalAccessException, InvalidAnnotationTypeException {
         final String[] fizzBuzzEnabled = new String[]{"--foobar", "--fizzbuzz", "foobar"};
         argumentHandler.enrichAnnotated(fizzBuzzEnabled);
 
@@ -95,7 +97,7 @@ class ArgumentHandlerTestCase {
 
 
     @Test
-    void shouldSetBothFieldsWhenGivenBothOptionsAndRequiresParamFieldIsFirst() throws IOException, IllegalAccessException {
+    void shouldSetBothFieldsWhenGivenBothOptionsAndRequiresParamFieldIsFirst() throws IOException, IllegalAccessException, InvalidAnnotationTypeException {
         final String[] fizzBuzzEnabled = new String[]{"--fizzbuzz", "foobar", "--foobar"};
         argumentHandler.enrichAnnotated(fizzBuzzEnabled);
 
