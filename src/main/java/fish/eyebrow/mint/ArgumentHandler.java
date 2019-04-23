@@ -6,13 +6,14 @@ import fish.eyebrow.mint.exception.InvalidAnnotationTypeException;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Set;
 
 public class ArgumentHandler {
 
     private static final String OPTION_PREFIX = "--";
 
-    private static final Set<Class> ACCEPTED_CLASSES = Set.of(String.class, Boolean.class, boolean.class);
+    private static final Set<Class> ACCEPTED_CLASSES = new HashSet<>(Arrays.asList(String.class, Boolean.class, boolean.class));
 
     private final Object instance;
 
@@ -22,6 +23,7 @@ public class ArgumentHandler {
     }
 
 
+    @SuppressWarnings("WeakerAccess")
     public void enrichAnnotated(final String... args) throws IOException, IllegalAccessException, InvalidAnnotationTypeException {
         final Field[] declaredFields = instance.getClass().getDeclaredFields();
 
@@ -42,7 +44,8 @@ public class ArgumentHandler {
     }
 
 
-    private void setAnnotatedField(final Field declaredField, final boolean requiresParam, final String optionParam) throws IllegalAccessException, IOException, InvalidAnnotationTypeException {
+    private void setAnnotatedField(final Field declaredField, final boolean requiresParam, final String optionParam) throws IllegalAccessException, IOException,
+            InvalidAnnotationTypeException {
         final Class fieldType = declaredField.getType();
 
         if (ACCEPTED_CLASSES.contains(fieldType)) {
@@ -55,10 +58,12 @@ public class ArgumentHandler {
                 }
 
                 throw new IOException("Expected option parameter.");
-            } else {
+            }
+            else {
                 declaredField.set(instance, true);
             }
-        } else {
+        }
+        else {
             throw new InvalidAnnotationTypeException(declaredField);
         }
     }
