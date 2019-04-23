@@ -5,7 +5,7 @@ Java argument handler framework.
 > $ java TestClass.java --foobar
 
 ```
-@Option(option="foobar", type=Boolean.class)
+@Option(option = "foobar", type = Boolean.class)
 private boolean fooBarOptionEnabled;
 
 public static void main(final String... args) {
