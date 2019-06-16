@@ -29,22 +29,27 @@ public class ArgumentHandler {
 
         for (final Field declaredField : declaredFields) {
             if (declaredField.isAnnotationPresent(Option.class)) {
-                final Option option = declaredField.getAnnotation(Option.class);
-                final String optionWithPrefix = OPTION_PREFIX + option.option();
-                final boolean requiresParam = option.requiresParam();
-
-                final int optionIndex = Arrays.asList(args).indexOf(optionWithPrefix);
-                if (optionIndex != -1) {
-                    declaredField.setAccessible(true);
-                    final String optionParam = optionIndex < args.length - 1 ? args[optionIndex + 1] : null;
-                    setAnnotatedField(declaredField, requiresParam, optionParam);
-                }
+                applyAnnotationLogic(declaredField, args);
             }
         }
     }
 
 
-    private void setAnnotatedField(final Field declaredField, final boolean requiresParam, final String optionParam) throws IllegalAccessException, IOException,
+    private void applyAnnotationLogic(final Field declaredField, final String[] args) throws IllegalAccessException, IOException, InvalidAnnotationTypeException {
+        final Option option = declaredField.getAnnotation(Option.class);
+        final String optionWithPrefix = OPTION_PREFIX + option.option();
+        final boolean requiresParam = option.requiresParam();
+
+        final int optionIndex = Arrays.asList(args).indexOf(optionWithPrefix);
+        if (optionIndex != -1) {
+            declaredField.setAccessible(true);
+            final String optionParam = optionIndex < args.length - 1 ? args[optionIndex + 1] : null;
+            applyAnnotationLogic(declaredField, requiresParam, optionParam);
+        }
+    }
+
+
+    private void applyAnnotationLogic(final Field declaredField, final boolean requiresParam, final String optionParam) throws IllegalAccessException, IOException,
             InvalidAnnotationTypeException {
         final Class fieldType = declaredField.getType();
 
