@@ -93,12 +93,12 @@ class CalledOptionExecutorTestCase {
 
 
         @CalledOption(option = "param-call-option")
-        void paramCallAnnotatedMethod(final String param) {
+        void paramCallAnnotatedMethod(final String ignore) {
         }
 
 
         @CalledOption(option = "param-call-option-int")
-        void paramCallAnnotatedMethodInt(final int param) {
+        void paramCallAnnotatedMethodInt(final int ignore) {
         }
     }
 }
