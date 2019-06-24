@@ -46,7 +46,53 @@ class AssignedOptionExecutorTestCase {
     }
 
 
+    @Test
+    void shouldAssignPrimitiveTypesToTheirDefaultOnValues() throws IllegalAccessException {
+        final String[] args = {
+                "--boolean-option",
+                "--integer-option",
+                "--double-option",
+                "--float-option",
+                "--long-option",
+                "--short-option",
+                "--byte-option",
+                "--char-option"
+        };
+        assignedOptionExecutor.execute(testClass, args);
+
+        assertThat(testClass.booleanOption).isTrue();
+        assertThat(testClass.integerOption).isOne();
+        assertThat(testClass.doubleOption).isOne();
+        assertThat(testClass.floatOption).isOne();
+        assertThat(testClass.longOption).isOne();
+        assertThat(testClass.shortOption).isOne();
+        assertThat(testClass.byteOption).isOne();
+        assertThat(testClass.charOption).isEqualTo((char) 1);
+    }
+
+
     class TestClass {
+
+        @AssignedOption(option = "integer-option")
+        int integerOption = 0;
+
+        @AssignedOption(option = "double-option")
+        double doubleOption = 0.0;
+
+        @AssignedOption(option = "float-option")
+        float floatOption = 0.0F;
+
+        @AssignedOption(option = "long-option")
+        long longOption = 0L;
+
+        @AssignedOption(option = "short-option")
+        short shortOption = 0;
+
+        @AssignedOption(option = "byte-option")
+        byte byteOption = 0;
+
+        @AssignedOption(option = "char-option")
+        char charOption = 0;
 
         @AssignedOption(option = "boolean-option")
         boolean booleanOption = false;

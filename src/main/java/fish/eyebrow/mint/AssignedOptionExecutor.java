@@ -1,8 +1,24 @@
 package fish.eyebrow.mint;
 
 import java.lang.reflect.Field;
+import java.util.HashMap;
+import java.util.Map;
 
 public class AssignedOptionExecutor implements OptionExecutor<AssignedOption> {
+
+    private final static Map<Class, Object> PRIMITIVE_DEFAULTS = new HashMap<Class, Object>() {
+        {
+            put(boolean.class, true);
+            put(int.class, 1);
+            put(double.class, 1.0);
+            put(float.class, 1.0F);
+            put(long.class, 1L);
+            put(short.class, (short) 1);
+            put(byte.class, (byte) 1);
+            put(char.class, (char) 1);
+        }
+    };
+
 
     @Override
     public Class<AssignedOption> annotationType() {
@@ -26,7 +42,18 @@ public class AssignedOptionExecutor implements OptionExecutor<AssignedOption> {
         final String option = annotation.prefix() + annotation.option();
         for (final String arg : args) {
             if (arg.equals(option)) {
-                field.setBoolean(object, true);
+                assignWithPrimitiveDefaults(object, field);
+            }
+        }
+    }
+
+
+    private void assignWithPrimitiveDefaults(final Object object, final Field field) throws IllegalAccessException {
+        for (final Class primitiveDefault : PRIMITIVE_DEFAULTS.keySet()) {
+            if (primitiveDefault.equals(field.getType())) {
+                final Object defaultValue = PRIMITIVE_DEFAULTS.get(field.getType());
+                field.set(object, defaultValue);
+                break;
             }
         }
     }
