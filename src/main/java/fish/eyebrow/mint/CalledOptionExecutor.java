@@ -28,9 +28,16 @@ public class CalledOptionExecutor implements OptionExecutor {
         final String option = annotation.prefix() + annotation.option();
         boolean alreadyCalled = false;
 
-        for (final String arg : args) {
+        for (int i = 0; i < args.length; i++) {
+            final String arg = args[i];
             if (option.equals(arg) && !alreadyCalled) {
-                method.invoke(object);
+                if (method.getParameterCount() == 0) {
+                    method.invoke(object);
+                }
+                else {
+                    method.invoke(object, args[i + 1]);
+                }
+
                 alreadyCalled = annotation.singleCall();
             }
         }

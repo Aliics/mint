@@ -1,5 +1,7 @@
 package fish.eyebrow.mint;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
@@ -60,6 +62,24 @@ class CalledOptionExecutorTestCase {
     }
 
 
+    @Test
+    void shouldInvokeAnnotatedMethodWithParameter() throws InvocationTargetException, IllegalAccessException {
+        final String[] args = { "--param-call-option", "foo" };
+        calledOptionExecutor.execute(testClass, args);
+
+        verify(testClass).paramCallAnnotatedMethod("foo");
+    }
+
+
+    @Test
+    void shouldThrowTypeExceptionWhenMethodWithParamIsCalledWithInvalidOption() {
+        final String[] args = { "--param-call-option-int", "foo" };
+
+        assertThrows(IllegalArgumentException.class, () -> calledOptionExecutor.execute(testClass, args));
+        verify(testClass, times(0)).paramCallAnnotatedMethodInt(anyInt());
+    }
+
+
     private class TestClass {
 
         @CalledOption(option = "test-called")
@@ -69,6 +89,16 @@ class CalledOptionExecutorTestCase {
 
         @CalledOption(option = "single-call-option", singleCall = true)
         void singleCallAnnotatedMethod() {
+        }
+
+
+        @CalledOption(option = "param-call-option")
+        void paramCallAnnotatedMethod(final String param) {
+        }
+
+
+        @CalledOption(option = "param-call-option-int")
+        void paramCallAnnotatedMethodInt(final int param) {
         }
     }
 }
