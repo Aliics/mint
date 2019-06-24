@@ -71,7 +71,19 @@ class AssignedOptionExecutorTestCase {
     }
 
 
+    @Test
+    void shouldSetFieldValueToOptionWhenVariableFlagEnabled() throws IllegalAccessException {
+        final String[] args = { "--variable-option", "foo" };
+        assignedOptionExecutor.execute(testClass, args);
+
+        assertThat(testClass.variableOption).isEqualTo("foo");
+    }
+
+
     class TestClass {
+
+        @AssignedOption(option = "variable-option", variable = true)
+        String variableOption;
 
         @AssignedOption(option = "integer-option")
         int integerOption = 0;

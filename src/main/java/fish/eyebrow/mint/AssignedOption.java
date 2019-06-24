@@ -10,4 +10,7 @@ public @interface AssignedOption {
 
 
     String prefix() default "--";
+
+
+    boolean variable() default false;
 }

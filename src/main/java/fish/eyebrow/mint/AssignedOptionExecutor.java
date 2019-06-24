@@ -40,9 +40,15 @@ public class AssignedOptionExecutor implements OptionExecutor<AssignedOption> {
 
     private void assignAnnotated(final Object object, final String[] args, final Field field, final AssignedOption annotation) throws IllegalAccessException {
         final String option = annotation.prefix() + annotation.option();
-        for (final String arg : args) {
+        for (int i = 0; i < args.length; i++) {
+            final String arg = args[i];
             if (arg.equals(option)) {
-                assignWithPrimitiveDefaults(object, field);
+                if (!annotation.variable()) {
+                    assignWithPrimitiveDefaults(object, field);
+                }
+                else {
+                    field.set(object, args[i + 1]);
+                }
             }
         }
     }
