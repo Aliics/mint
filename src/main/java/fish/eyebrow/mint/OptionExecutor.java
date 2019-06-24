@@ -2,9 +2,9 @@ package fish.eyebrow.mint;
 
 import java.lang.reflect.InvocationTargetException;
 
-public interface OptionExecutor {
+public interface OptionExecutor<T> {
 
-    Class<CalledOption> annotationType();
+    Class<T> annotationType();
 
 
     void execute(final Object object, final String[] args) throws InvocationTargetException, IllegalAccessException;

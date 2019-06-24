@@ -3,7 +3,7 @@ package fish.eyebrow.mint;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-public class CalledOptionExecutor implements OptionExecutor {
+public class CalledOptionExecutor implements OptionExecutor<CalledOption> {
 
     @Override
     public Class<CalledOption> annotationType() {
