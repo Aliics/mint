@@ -31,15 +31,20 @@ public class CalledOptionExecutor implements OptionExecutor<CalledOption> {
         for (int i = 0; i < args.length; i++) {
             final String arg = args[i];
             if (option.equals(arg) && !alreadyCalled) {
-                if (method.getParameterCount() == 0) {
-                    method.invoke(object);
-                }
-                else {
-                    method.invoke(object, args[i + 1]);
-                }
+                invokeMethod(object, args, method, i);
 
                 alreadyCalled = annotation.singleCall();
             }
+        }
+    }
+
+
+    private void invokeMethod(final Object object, final String[] args, final Method method, final int i) throws IllegalAccessException, InvocationTargetException {
+        if (method.getParameterCount() == 0) {
+            method.invoke(object);
+        }
+        else {
+            method.invoke(object, args[i + 1]);
         }
     }
 }
