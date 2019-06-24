@@ -1,19 +1,10 @@
 # mint
-Java argument handler framework.
+Java option handling framework.
 
-## basic example
-> $ java TestClass.class --foobar
+## information
+Below is a table of the *two* useful annotations for marking fields and methods.
 
-```
-@Option(option = "foobar")
-private boolean fooBarOptionEnabled;
-
-public static void main(final String... args) {
-    final ArgumentHandler argumentHandler = new ArgumentHandler(this);
-    argumentHandler.enrichAnnotated(args);
-    
-    System.out.println(fooBarOptionEnabled);
-}
-
-// This will output "true"
-```
+|annotation|fuctionality|
+|:--|:--|
+|*@CalledOption*|`Invokes a method` associated with an option given via command line arguments. _Can be given parameters *or* invoked as is._|
+|*@AssignedOption*|`Assigns a field` associated with an option given via command line arguments. _Can be given a value via command line options *or* assigned based on their primitive `on` values._|
